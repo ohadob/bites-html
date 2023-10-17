@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f4f5f7;
+            color: #707175;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 50px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            color: #1253fa;
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: 500;
+            color: #707175;
+        }
+
+        .btn-primary {
+            background-color: #1253fa;
+            border-color: #1253fa;
+        }
+
+        .btn-primary:hover {
+            background-color: #0e42c4;
+            border-color: #0e42c4;
+        }
+
+        h4 {
+            margin-top: 30px;
+            color: #1253fa;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2 class="text-center">Pricing Calculator</h2>
+        
+        <div class="form-group">
+            <label for="users">Enter number of users:</label>
+            <input type="number" class="form-control" id="users" placeholder="Enter users" min="0">
+        </div>
+
+        <div class="form-group">
+            <label for="discount">UKG Aspire Speacial Discount (%):</label>
+            <input type="number" class="form-control" id="discount" placeholder="Enter discount percentage" min="0" max="100" value="15">
+        </div>
+
+        <h4>Results:</h4>
+        <p>Monthly Subscription: <span id="monthlyResult">$0</span></p>
+        <p>Annual Subscription: <span id="annualResult">$0</span></p>
+        <p>UKG Aspire Special Discount: <span id="displayedDiscount">15%</span></p>
+        <p>Bites Discounted Annual Subscription: <span id="specialAnnualResult">$0</span></p>
+        <p>Cost Per Employee Per Month: <span id="costPerEmployeePerMonth">$0.00</span></p>
+
+        <button onclick="calculatePricing()" class="btn btn-primary btn-block">Calculate Pricing</button>
+    </div>
+
+    <script>
+        function formatCurrency(value, decimals) {
+            return "$" + value.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+        }
+
+        function calculatePricing() {
+            var users = parseInt(document.getElementById("users").value);
+            var discount = parseFloat(document.getElementById("discount").value) / 100;
+            var monthlyPrice;
+            var annualPrice;
+            var specialAnnualPrice;
+            var costPerEmployeePerMonth;
+
+            if (users >= 0 && users <= 300) {
+                monthlyPrice = users * 3.0;
+                annualPrice = monthlyPrice * 12 * 0.9;
+            } else if (users >= 301 && users <= 500) {
+                monthlyPrice = users * 2.5;
+                annualPrice = monthlyPrice * 12 * 0.9;
+            } else if (users >= 501 && users <= 1000) {
+                monthlyPrice = users * 2.0;
+                annualPrice = monthlyPrice * 12 * 0.9;
+            } else if (users >= 1001 && users <= 2000) {
+                monthlyPrice = users * 1.5;
+                annualPrice = monthlyPrice * 12 * 0.9;
+            } else {
+                monthlyPrice = users * 1.25;
+                annualPrice = monthlyPrice * 12 * 0.9;
+            }
+
+            specialAnnualPrice = annualPrice * (1 - discount);
+            costPerEmployeePerMonth = (specialAnnualPrice / users) / 12;
+
+            document.getElementById("monthlyResult").innerHTML = formatCurrency(monthlyPrice, 0);
+            document.getElementById("annualResult").innerHTML = formatCurrency(annualPrice, 0);
+            document.getElementById("displayedDiscount").innerHTML = (discount * 100).toFixed(0) + "%";
+            document.getElementById("specialAnnualResult").innerHTML = formatCurrency(specialAnnualPrice, 0);
+            document.getElementById("costPerEmployeePerMonth").innerHTML = formatCurrency(costPerEmployeePerMonth, 2);
+        }
+
+        // Adding the event listener for the Enter key
+        document.getElementById("users").addEventListener("keyup", function(event) {
+            // Number 13 is the "Enter" key on the keyboard
+            if (event.keyCode === 13) {
+                // Cancel the default action, if needed
+                event.preventDefault();
+                // Trigger the button element with a click
+                calculatePricing();
+            }
+        });
+    </script>
+</body>
+
+</html>
